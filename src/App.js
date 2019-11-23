@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import axios from "axios";
 
 // Components
@@ -7,6 +6,10 @@ import Sidebar from "./Sidebar";
 import AuthorsList from "./AuthorsList";
 import AuthorDetail from "./AuthorDetail";
 import Loading from "./Loading";
+
+const instance = axios.create({
+  baseURL: "https://the-index-api.herokuapp.com/api/"
+});
 
 class App extends Component {
   state = {
@@ -17,9 +20,7 @@ class App extends Component {
 
   async componentDidMount() {
     try {
-      const response = await axios.get(
-        "https://the-index-api.herokuapp.com/api/authors/"
-      );
+      const response = await instance.get("authors/");
       const authors = response.data;
       this.setState({ authors: authors, loading: false });
       console.log("RESPONSE", authors);
@@ -31,9 +32,7 @@ class App extends Component {
   selectAuthor = async authorId => {
     try {
       this.setState({ loading: true });
-      const response = await axios.get(
-        `https://the-index-api.herokuapp.com/api/authors/${authorId}/`
-      );
+      const response = await instance.get(`authors/${authorId}/`);
       const author = response.data;
       console.log(author);
       this.setState({ currentAuthor: author, loading: false });
